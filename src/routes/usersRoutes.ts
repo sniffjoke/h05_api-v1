@@ -3,6 +3,7 @@ import {createUserController, deleteUserByIdController, getUsersController} from
 import {idUserValidator} from "../middlewares/authValidators";
 import {errorMiddleware} from "../middlewares/errorMiddleware";
 import {authMiddleware} from "../middlewares/authMiddleware";
+import {emailUserValidator, loginUserValidator, passwordUserValidator} from "../middlewares/usersValidators";
 
 
 const router = express.Router();
@@ -11,6 +12,9 @@ router.route('/')
     .get(getUsersController)
     .post(
         authMiddleware,
+        loginUserValidator,
+        emailUserValidator,
+        passwordUserValidator,
         errorMiddleware,
         createUserController
     );
