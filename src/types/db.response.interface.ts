@@ -18,3 +18,10 @@ export interface PostDBTypeResponse {
     blogName: string;
     createdAt?: string;
 }
+
+export interface UserDBTypeResponse {
+    _id: ObjectId;
+    login: string;
+    email: string;
+    createdAt?: string;
+}

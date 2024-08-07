@@ -1,6 +1,6 @@
 import {db} from "../db/mongo-db";
 
-export const queryHelper = async (query: { [key: string]: string | undefined }, searchProperty: 'blogs' | 'posts', blogId?: string) => {
+export const queryHelper = async (query: { [key: string]: string | undefined }, searchProperty: 'blogs' | 'posts' | 'users', blogId?: string) => {
     const searchNameTerm = query.searchNameTerm ? query.searchNameTerm : null
 
     const queryName = searchNameTerm !== null ? searchNameTerm : ''

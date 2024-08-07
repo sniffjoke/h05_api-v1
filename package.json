@@ -9,10 +9,11 @@
     "dev": "yarn nodemon --inspect dist/index.js",
     "jest": "jest i --runInBand --detectOpenHandles --forceExit"
   },
-  "license": "MIT",
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.12",
     "@types/supertest": "^6.0.2",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

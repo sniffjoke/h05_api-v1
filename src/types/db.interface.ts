@@ -11,3 +11,9 @@ export interface PostDBType {
     content: string;
     blogId: string;
 }
+
+export interface UserDBType {
+    login: string;
+    password: string;
+    email: string;
+}
