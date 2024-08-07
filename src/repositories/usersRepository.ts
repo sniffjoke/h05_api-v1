@@ -2,8 +2,6 @@ import {UserDBType} from "../types/db.interface";
 import {userCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {UserDBTypeResponse} from "../types/db.response.interface";
-import {LoginUserDto} from "../dtos/login.dto";
-import * as bcrypt from "bcrypt";
 
 
 export const usersRepository = {
@@ -57,15 +55,32 @@ export const usersRepository = {
         return await userCollection.deleteOne({_id: id})
     },
 
-    async validateUser(userDto: LoginUserDto) {
-        const user = await this.getUserByEmail(userDto.email);
-        // const isPasswordCorrect = await bcrypt.compare(userDto.password, '');
+    async validateUserByEmail(email: string) {
+        const user = await this.getUserByEmail(email);
         return user
     },
+
+    async validateUserByLogin(login: string) {
+        const user = await this.getUserByLogin(login);
+        return user
+    },
+
+    // async validateUserByPassword(userDto: LoginUserDto) {
+    //  //   const isPasswordCorrect = await bcrypt.compare(userDto.password, '');
+        // const user = await this.getUserByEmail(userDto.email);
+        // const isPasswordCorrect = userDto.password === user?.password
+        // return isPasswordCorrect
+    // },
 
     async getUserByEmail(email: string) {
         const user = await userCollection.findOne({email})
         return user
+    },
+
+    async getUserByLogin(login: string) {
+        const user = await userCollection.findOne({login})
+        return user
     }
+
 
 }

@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import {ObjectId} from "mongodb";
-import {blogsRepository} from "../repositories/blogsRepository";
 import {queryHelper} from "../helpers/helpers";
 import {usersRepository} from "../repositories/usersRepository";
 
@@ -32,9 +31,34 @@ export const getUserByIdController = async (req: Request, res: Response) => {
 
 export const createUserController = async (req: Request, res: Response) => {
     try {
+        const uniqueEmail = await usersRepository.validateUserByEmail(req.body.email)
+        const uniqueLogin = await usersRepository.validateUserByLogin(req.body.login)
+        if (uniqueEmail) {
+            res.status(400).json({
+                errorsMessages: [
+                    {
+                        message: "Данный email уже существует",
+                        field: "email"
+                    }
+                ]
+            })
+            return
+        }
+        if (uniqueLogin) {
+            res.status(400).json({
+                errorsMessages: [
+                    {
+                        message: "Данный login уже существует",
+                        field: "login"
+                    }
+                ]
+            })
+            return
+        }
         const newUser = await usersRepository.createUser(req.body)
         const newUserRender = await usersRepository.userMapForRender(newUser)
         res.status(201).json(newUserRender)
+
     } catch (e) {
         res.status(500).send(e)
     }
