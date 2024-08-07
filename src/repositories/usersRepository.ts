@@ -45,7 +45,6 @@ export const usersRepository = {
 
     userMapForRender(user: UserDBTypeResponse) {
         const {_id, createdAt, login, email} = user
-        console.log(user)
         return {
             id: _id,
             login,
@@ -60,7 +59,7 @@ export const usersRepository = {
 
     async validateUser(userDto: LoginUserDto) {
         const user = await this.getUserByEmail(userDto.email);
-        const isPasswordCorrect = await bcrypt.compare(userDto.password, '');
+        // const isPasswordCorrect = await bcrypt.compare(userDto.password, '');
         return user
     },
 

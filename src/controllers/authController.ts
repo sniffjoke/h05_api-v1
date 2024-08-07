@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import {authRepository} from "../repositories/authRepository";
-import {LoginUserDto} from "../dtos/login.dto";
 
 
 export const loginController = async (req: Request, res: Response) => {
@@ -9,7 +8,7 @@ export const loginController = async (req: Request, res: Response) => {
         const userData = await authRepository.login({email, password});
         if (!userData) {
             res.status(401).json({
-                "errorsMessages": [
+                errorsMessages: [
                     {
                         "message": "Неверные данные",
                         "field": "string"
