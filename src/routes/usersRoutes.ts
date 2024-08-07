@@ -16,6 +16,7 @@ router.route('/')
     );
 router.route('/:id')
     .delete(
+        authMiddleware,
         idUserValidator,
         errorMiddleware,
         deleteUserByIdController
