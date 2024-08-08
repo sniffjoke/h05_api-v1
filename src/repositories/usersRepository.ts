@@ -9,10 +9,12 @@ export const usersRepository = {
     async getAllUsers(query: any) {
         const queryLogin = query.searchLoginTerm !== null ? query.searchLoginTerm : ''
         const queryEmail = query.searchEmailTerm !== null ? query.searchEmailTerm : ''
-        const filter = {
-            login: {$regex: queryLogin, $options: "i"},
-            email: {$regex: queryEmail, $options: "i"},
-        }
+        // const filter = {
+        //     login: {$regex: queryLogin, $options: "i"},
+        //     email: {$regex: queryEmail, $options: "i"},
+        // }
+        const filter = {$or: [{login: {$regex: queryLogin, $options: "i"}}, {email: {$regex: queryEmail, $options: "i"}}]}
+
         const users = await userCollection
             .find(filter)
             .sort(query.sortBy, query.sortDirection)

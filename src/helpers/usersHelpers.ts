@@ -14,7 +14,6 @@ export const usersQueryHelper = async (query: { [key: string]: string | undefine
 
     // const totalCount = await db.collection('users').countDocuments({login: filterLogin, email: filterEmail})
     const totalCount = await db.collection('users').countDocuments({$or: [{login: filterLogin}, {email: filterEmail}]})
-    console.log(totalCount)
     const pageSize = query.pageSize !== undefined ? +query.pageSize : 10
     const pagesCount = Math.ceil(totalCount / +pageSize)
 
