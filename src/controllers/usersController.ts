@@ -34,7 +34,7 @@ export const createUserController = async (req: Request, res: Response) => {
         const uniqueEmail = await usersRepository.validateUserByEmail(req.body.email)
         const uniqueLogin = await usersRepository.validateUserByLogin(req.body.login)
         if (uniqueEmail) {
-            res.status(400).json({
+            res.status(401).json({
                 errorsMessages: [
                     {
                         message: "Данный email уже существует",
@@ -45,7 +45,7 @@ export const createUserController = async (req: Request, res: Response) => {
             return
         }
         if (uniqueLogin) {
-            res.status(400).json({
+            res.status(401).json({
                 errorsMessages: [
                     {
                         message: "Данный login уже существует",
