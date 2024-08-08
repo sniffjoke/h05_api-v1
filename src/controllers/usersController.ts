@@ -2,10 +2,11 @@ import {Request, Response} from 'express';
 import {ObjectId} from "mongodb";
 import {queryHelper} from "../helpers/helpers";
 import {usersRepository} from "../repositories/usersRepository";
+import {usersQueryHelper} from "../helpers/usersHelpers";
 
 
 export const getUsersController = async (req: Request<any, any, any, any>, res: Response) => {
-    const query = await queryHelper(req.query, 'users')
+    const query = await usersQueryHelper(req.query)
     const users = await usersRepository.getAllUsers(query)
     const {
         pageSize,

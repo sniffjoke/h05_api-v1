@@ -7,9 +7,11 @@ import {UserDBTypeResponse} from "../types/db.response.interface";
 export const usersRepository = {
 
     async getAllUsers(query: any) {
-        const queryName = query.searchNameTerm !== null ? query.searchNameTerm : ''
+        const queryLogin = query.searchLoginTerm !== null ? query.searchLoginTerm : ''
+        const queryEmail = query.searchEmailTerm !== null ? query.searchEmailTerm : ''
         const filter = {
-            login: {$regex: queryName, $options: "i"},
+            login: {$regex: queryLogin, $options: "i"},
+            email: {$regex: queryEmail, $options: "i"},
         }
         const users = await userCollection
             .find(filter)
