@@ -12,7 +12,7 @@ export const loginController = async (req: Request, res: Response) => {
             user = await usersRepository.validateUserByEmail(loginOrEmail)
         }
         if (!user) {
-            res.status(400).json({
+            res.status(401).json({
                 errorsMessages: [
                     {
                         message: "Данного пользователя не существует",
@@ -26,7 +26,7 @@ export const loginController = async (req: Request, res: Response) => {
             if (!isPasswordCorrect) {
                 res.status(204).send('Вход выполнен')
             } else {
-                res.status(400).json({
+                res.status(401).json({
                     errorsMessages: [
                         {
                             message: "Неправильный пароль",
