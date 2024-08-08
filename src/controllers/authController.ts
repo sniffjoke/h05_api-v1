@@ -1,33 +1,41 @@
 import {Request, Response} from 'express';
-import {authRepository} from "../repositories/authRepository";
 import {usersRepository} from "../repositories/usersRepository";
 
 
 export const loginController = async (req: Request, res: Response) => {
     try {
-        const {email, password} = req.body;
-        const emailValidate = await usersRepository.validateUserByEmail(email)
-        if (!emailValidate) {
-            res.status(400).json({errorsMessages: [
-                    {
-                        message: "Данного email не существует",
-                        field: "email"
-                    }
-            ]})
-            return
+        const {loginOrEmail, password} = req.body;
+        let user
+        if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(loginOrEmail)) {
+            user = await usersRepository.validateUserByLogin(loginOrEmail)
+        } else {
+            user = await usersRepository.validateUserByEmail(loginOrEmail)
         }
-        const userData = await authRepository.login({email, password});
-        if (!userData) {
-            res.status(401).json({
+        if (!user) {
+            res.status(400).json({
                 errorsMessages: [
                     {
-                        "message": "Неверные данные",
-                        "field": "string"
+                        message: "Данного пользователя не существует",
+                        field: "loginOrEmail"
                     }
                 ]
             })
+            return
         } else {
-        res.status(204).send('Вход выполнен')
+            const isPasswordCorrect = password !== user.password
+            if (!isPasswordCorrect) {
+                res.status(204).send('Вход выполнен')
+            } else {
+                res.status(400).json({
+                    errorsMessages: [
+                        {
+                            message: "Неправильный пароль",
+                            field: "password"
+                        }
+                    ]
+                })
+                return
+            }
         }
     } catch (e) {
         res.status(500).send(e)
