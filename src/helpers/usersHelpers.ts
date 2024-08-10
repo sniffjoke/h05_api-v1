@@ -4,15 +4,12 @@ export const usersQueryHelper = async (query: { [key: string]: string | undefine
     const searchLoginTerm = query.searchLoginTerm ? query.searchLoginTerm : null
     const searchEmailTerm = query.searchEmailTerm ? query.searchEmailTerm : null
 
-    console.log(query)
-
     const queryLogin = searchLoginTerm !== null ? searchLoginTerm : ''
     const queryEmail = searchEmailTerm !== null ? searchEmailTerm : ''
 
     const filterLogin = {$regex: queryLogin, $options: "i"};
     const filterEmail = {$regex: queryEmail, $options: "i"};
 
-    // const totalCount = await db.collection('users').countDocuments({login: filterLogin, email: filterEmail})
     const totalCount = await db.collection('users').countDocuments({$or: [{login: filterLogin}, {email: filterEmail}]})
     const pageSize = query.pageSize !== undefined ? +query.pageSize : 10
     const pagesCount = Math.ceil(totalCount / +pageSize)

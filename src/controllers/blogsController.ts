@@ -2,9 +2,10 @@ import {Request, Response} from 'express';
 import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {queryHelper} from "../helpers/helpers";
+import {blogsQueryRepository} from "../queryRepositories/blogsQueryRepository";
 
 
-export const getController = async (req: Request<any, any, any, any>, res: Response) => {
+export const getBlogsController = async (req: Request<any, any, any, any>, res: Response) => {
     const query = await queryHelper(req.query, 'blogs')
     const blogs = await blogsRepository.getAllBlogs(query)
     const {
@@ -23,23 +24,23 @@ export const getController = async (req: Request<any, any, any, any>, res: Respo
     })
 }
 
-export const getControllerById = async (req: Request, res: Response) => {
-    const blogId = new ObjectId(req.params.id)
-    const blog = await blogsRepository.findBlogForRender(blogId)
+export const getBlogByIdController = async (req: Request, res: Response) => {
+    const id = new ObjectId(req.params.id)
+    const blog = await blogsQueryRepository.blogOutput(id)
     res.status(200).json(blog)
 }
 
-export const postController = async (req: Request, res: Response) => {
+export const createBlogController = async (req: Request, res: Response) => {
     try {
-        const newBlog = await blogsRepository.create(req.body)
-        const newBlogMap = await blogsRepository.blogMapForRender(newBlog)
+        const newBlog = await blogsRepository.createBlog(req.body)
+        const newBlogMap = blogsQueryRepository.blogMapOutput(newBlog)
         res.status(201).json(newBlogMap)
     } catch (e) {
         res.status(500).send(e)
     }
 }
 
-export const putController = async (req: Request, res: Response) => {
+export const updateBlogController = async (req: Request, res: Response) => {
     try {
         const blogId = new ObjectId(req.params.id)
         await blogsRepository.updateBlogById(blogId, req.body)
@@ -49,7 +50,7 @@ export const putController = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteController = async (req: Request, res: Response) => {
+export const deleteBlogController = async (req: Request, res: Response) => {
     try {
         const blogId = new ObjectId(req.params.id)
         await blogsRepository.deleteBlog(blogId)

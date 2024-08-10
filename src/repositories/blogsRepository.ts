@@ -1,29 +1,20 @@
 import {BlogDBType} from "../types/db.interface";
 import {blogCollection} from "../db/mongo-db";
 import {ObjectId, UpdateResult} from "mongodb";
-import {BlogDBTypeResponse} from "../types/db.response.interface";
+import {blogsQueryRepository} from "../queryRepositories/blogsQueryRepository";
 
 
 export const blogsRepository = {
-    
+
     async getAllBlogs(query: any) {
-        const queryName = query.searchNameTerm !== null ? query.searchNameTerm : ''
-        const filter = {
-            name: {$regex: queryName, $options: "i"},
-        }
-        const blogs = await blogCollection
-            .find(filter)
-            .sort(query.sortBy, query.sortDirection)
-            .limit(query.pageSize)
-            .skip((query.page - 1) * query.pageSize)
-            .toArray()
+        const blogs = await blogsQueryRepository.blogsSortWithQuery(query)
         return {
             ...query,
-            items: blogs.map(blog => this.blogMapForRender(blog))
+            items: blogs.map(blog => blogsQueryRepository.blogMapOutput(blog))
         }
     },
 
-    async create(newBlog: BlogDBType): Promise<any> {
+    async createBlog(newBlog: BlogDBType): Promise<any> {
         const blog = {
             ...newBlog,
             isMembership: false,
@@ -33,12 +24,8 @@ export const blogsRepository = {
         return blog
     },
 
-    async findBlogById(blogId: ObjectId) {
-        return await blogCollection.findOne({_id: blogId})
-    },
-
-    async updateBlogById(blogId: ObjectId, blog: BlogDBType): Promise<UpdateResult> {
-        const findedBlog = await blogCollection.findOne({_id: blogId})
+    async updateBlogById(id: ObjectId, blog: BlogDBType): Promise<UpdateResult> {
+        const findedBlog = await blogsQueryRepository.findBlogById(id)
         const updates = {
             $set: {
                 name: blog.name,
@@ -50,25 +37,8 @@ export const blogsRepository = {
         return updatedBlog
     },
 
-    async findBlogForRender(blogId: ObjectId) {
-        const blog = await this.findBlogById(blogId)
-        return this.blogMapForRender(blog as BlogDBTypeResponse)
-    },
-
-    blogMapForRender(blog: BlogDBTypeResponse) {
-        const {_id, createdAt, name, websiteUrl, isMembership, description} = blog
-        return {
-            id: _id,
-            name,
-            websiteUrl,
-            isMembership,
-            createdAt,
-            description
-        }
-    },
-
-    async deleteBlog(blogId: ObjectId) {
-        return await blogCollection.deleteOne({_id: blogId})
+    async deleteBlog(id: ObjectId) {
+        return await blogCollection.deleteOne({_id: id})
     }
 
 }

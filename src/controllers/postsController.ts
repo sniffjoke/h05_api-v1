@@ -1,14 +1,13 @@
 import {Request, Response} from 'express';
 import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/postsRepository";
-import {blogsRepository} from "../repositories/blogsRepository";
 import {queryHelper} from "../helpers/helpers";
+import {blogsQueryRepository} from "../queryRepositories/blogsQueryRepository";
+import {postsQueryRepository} from "../queryRepositories/postsQueryRepository";
 
 
 export const getController = async (req: Request<any, any, any, any>, res: Response) => {
     try {
-        // const posts = await postsRepository.getAllPosts()
-        // res.status(200).json(posts)
         const query = await queryHelper(req.query, 'posts')
         const posts = await postsRepository.getAllPosts(query)
         const {
@@ -33,7 +32,7 @@ export const getController = async (req: Request<any, any, any, any>, res: Respo
 export const getControllerById = async (req: Request, res: Response) => {
     try {
         const postId = new ObjectId(req.params.id)
-        const post = await postsRepository.renderPost(postId)
+        const post = await postsQueryRepository.postOutput(postId)
         res.status(200).json(post)
     } catch (e) {
         res.status(500).send(e)
@@ -42,9 +41,9 @@ export const getControllerById = async (req: Request, res: Response) => {
 
 export const postController = async (req: Request, res: Response) => {
     try {
-        const blog = await blogsRepository.findBlogById(new ObjectId(req.body.blogId))
-        const newPost = await postsRepository.create({...req.body, blogName: blog?.name})
-        const newPostMap = await postsRepository.postMapForRender(newPost)
+        const blog = await blogsQueryRepository.findBlogById(new ObjectId(req.body.blogId))
+        const newPost = await postsRepository.createPost({...req.body, blogName: blog?.name})
+        const newPostMap = postsQueryRepository.postMapOutput(newPost)
         res.status(201).json(newPostMap)
     } catch (e) {
         res.status(500).send(e)
@@ -71,13 +70,11 @@ export const deleteController = async (req: Request, res: Response) => {
     }
 }
 
-export const getPostsByBlogId = async (req: Request<any, any, any, any>, res: Response) => {
+export const getAllPostsByBlogId = async (req: Request<any, any, any, any>, res: Response) => {
     try {
-        // const posts = await postsRepository.findPostsByBlogId(req.params.id)
-        // res.status(200).json(posts)
         console.log(req.params.id)
         const query = await queryHelper(req.query, 'posts', req.params.id)
-        const posts = await postsRepository.findPostsByBlogId(req.params.id, query)
+        const posts = await postsRepository.findAllPostsByBlogId(req.params.id, query)
         const {
             pageSize,
             pagesCount,
@@ -99,9 +96,9 @@ export const getPostsByBlogId = async (req: Request<any, any, any, any>, res: Re
 
 export const postPostByBlogId = async (req: Request, res: Response) => {
     try {
-        const blog = await blogsRepository.findBlogById(new ObjectId(req.params.id))
-        const newPost = await postsRepository.create({...req.body, blogName: blog?.name, blogId: req.params.id})
-        const newPostMap = await postsRepository.postMapForRender(newPost)
+        const blog = await blogsQueryRepository.findBlogById(new ObjectId(req.params.id))
+        const newPost = await postsRepository.createPost({...req.body, blogName: blog?.name, blogId: req.params.id})
+        const newPostMap = postsQueryRepository.postMapOutput(newPost)
         res.status(201).json(newPostMap)
     } catch (e) {
         res.status(500).send(e)

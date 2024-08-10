@@ -1,7 +1,7 @@
 import {body, param} from "express-validator";
-import {postsRepository} from "../repositories/postsRepository";
-import {blogsRepository} from "../repositories/blogsRepository";
 import {ObjectId} from "mongodb";
+import {blogsQueryRepository} from "../queryRepositories/blogsQueryRepository";
+import {postsQueryRepository} from "../queryRepositories/postsQueryRepository";
 
 export const titlePostValidator = body('title')
     .isString().withMessage('Должно быть строковым значением')
@@ -22,7 +22,7 @@ export const blogIdValidator = body('blogId')
     .isString().withMessage('Должно быть строковым значением')
     .trim()
     .custom(async blogId => {
-        const blog = await blogsRepository.findBlogById(new ObjectId(blogId))
+        const blog = await blogsQueryRepository.findBlogById(new ObjectId(blogId))
         if (blog) {
             return !!blog
         } else {
@@ -33,7 +33,7 @@ export const blogIdValidator = body('blogId')
 
 export const idPostValidator = param('id')
     .custom(async postId => {
-        const post: any = await postsRepository.findPostById(new ObjectId(postId))
+        const post: any = await postsQueryRepository.findPostById(new ObjectId(postId))
         if (!post) {
             throw new Error('Not found')
         } else {

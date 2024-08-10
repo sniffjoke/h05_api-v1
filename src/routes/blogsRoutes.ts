@@ -1,10 +1,8 @@
 import express from "express";
 import {
-    deleteController,
-    getController,
-    getControllerById,
-    postController,
-    putController
+    createBlogController, deleteBlogController, getBlogByIdController,
+    getBlogsController, updateBlogController
+
 } from "../controllers/blogsController";
 import {
     descriptionBlogValidator,
@@ -14,7 +12,7 @@ import {
 } from "../middlewares/blogsValidators";
 import {errorMiddleware} from "../middlewares/errorMiddleware";
 import {authMiddleware} from "../middlewares/authMiddleware";
-import {getPostsByBlogId, postPostByBlogId} from "../controllers/postsController";
+import {getAllPostsByBlogId, postPostByBlogId} from "../controllers/postsController";
 import {
     contentPostValidator,
     shortDescriptionPostValidator,
@@ -25,14 +23,14 @@ import {
 const router = express.Router();
 
 router.route('/')
-    .get(getController)
+    .get(getBlogsController)
     .post(
         authMiddleware,
         nameBlogValidator,
         descriptionBlogValidator,
         websiteUrlValidator,
         errorMiddleware,
-        postController
+        createBlogController
     );
 router.route('/:id')
     .put(
@@ -42,25 +40,25 @@ router.route('/:id')
         websiteUrlValidator,
         descriptionBlogValidator,
         errorMiddleware,
-        putController
+        updateBlogController
     )
     .delete(
         authMiddleware,
         idBlogValidator,
         errorMiddleware,
-        deleteController
+        deleteBlogController
     )
     .get(
         idBlogValidator,
         errorMiddleware,
-        getControllerById
+        getBlogByIdController
     );
 
 router.route('/:id/posts')
     .get(
         idBlogValidator,
         errorMiddleware,
-        getPostsByBlogId
+        getAllPostsByBlogId
     )
     .post(
         authMiddleware,
