@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/usersRepository";
 import {usersQueryHelper} from "../helpers/usersHelpers";
+import {usersQueryRepository} from "../queryRepositories/usersQueryRepository";
 
 
 export const getUsersController = async (req: Request<any, any, any, any>, res: Response) => {
@@ -25,14 +26,14 @@ export const getUsersController = async (req: Request<any, any, any, any>, res: 
 
 export const getUserByIdController = async (req: Request, res: Response) => {
     const id = new ObjectId(req.params.id)
-    const user = await usersRepository.responseUserForRender(id)
+    const user = await usersQueryRepository.userOutput(id)
     res.status(200).json(user)
 }
 
 export const createUserController = async (req: Request, res: Response) => {
     try {
-        const uniqueEmail = await usersRepository.validateUserByEmail(req.body.email)
-        const uniqueLogin = await usersRepository.validateUserByLogin(req.body.login)
+        const uniqueEmail = await usersQueryRepository.validateUserByEmail(req.body.email)
+        const uniqueLogin = await usersQueryRepository.validateUserByLogin(req.body.login)
         if (uniqueEmail) {
             res.status(401).json({
                 errorsMessages: [
@@ -56,8 +57,8 @@ export const createUserController = async (req: Request, res: Response) => {
             return
         }
         const newUser = await usersRepository.createUser(req.body)
-        const newUserRender = await usersRepository.userMapForRender(newUser)
-        res.status(201).json(newUserRender)
+        const newUserOutput = usersQueryRepository.userMapOutput(newUser)
+        res.status(201).json(newUserOutput)
 
     } catch (e) {
         res.status(500).send(e)

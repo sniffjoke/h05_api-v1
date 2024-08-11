@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {usersRepository} from "../repositories/usersRepository";
+import {usersQueryRepository} from "../queryRepositories/usersQueryRepository";
 
 
 export const loginController = async (req: Request, res: Response) => {
@@ -7,9 +7,9 @@ export const loginController = async (req: Request, res: Response) => {
         const {loginOrEmail, password} = req.body;
         let user
         if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(loginOrEmail)) {
-            user = await usersRepository.validateUserByLogin(loginOrEmail)
+            user = await usersQueryRepository.validateUserByLogin(loginOrEmail)
         } else {
-            user = await usersRepository.validateUserByEmail(loginOrEmail)
+            user = await usersQueryRepository.validateUserByEmail(loginOrEmail)
         }
         if (!user) {
             res.status(401).json({
