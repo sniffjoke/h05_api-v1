@@ -3,6 +3,7 @@ import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {queryHelper} from "../helpers/helpers";
 import {blogsQueryRepository} from "../queryRepositories/blogsQueryRepository";
+import {Blog} from "../types/blogs.interface";
 
 
 export const getBlogsController = async (req: Request<any, any, any, any>, res: Response) => {
@@ -33,7 +34,7 @@ export const getBlogByIdController = async (req: Request, res: Response) => {
 export const createBlogController = async (req: Request, res: Response) => {
     try {
         const newBlog = await blogsRepository.createBlog(req.body)
-        const newBlogMap = blogsQueryRepository.blogMapOutput(newBlog)
+        const newBlogMap = blogsQueryRepository.blogMapOutput(newBlog as Blog)
         res.status(201).json(newBlogMap)
     } catch (e) {
         res.status(500).send(e)

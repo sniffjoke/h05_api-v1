@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {postCollection} from "../db/mongo-db";
-import {PostDBTypeResponse} from "../types/db.response.interface";
+import {Post} from "../types/posts.interface";
 
 
 export const postsQueryRepository = {
@@ -14,7 +14,7 @@ export const postsQueryRepository = {
         return this.postMapOutput(post as any)
     },
 
-    postMapOutput(post: PostDBTypeResponse) {
+    postMapOutput(post: Post) {
         const {createdAt, blogName, title, shortDescription, content, _id, blogId} = post
         return {
             id: _id,

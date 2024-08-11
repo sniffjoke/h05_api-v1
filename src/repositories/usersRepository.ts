@@ -1,7 +1,7 @@
-import {UserDBType} from "../types/db.interface";
 import {userCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {usersQueryRepository} from "../queryRepositories/usersQueryRepository";
+import {UserDBType} from "../dtos/users.dto";
 
 
 export const usersRepository = {

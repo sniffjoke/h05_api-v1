@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {blogCollection} from "../db/mongo-db";
-import {BlogDBTypeResponse} from "../types/db.response.interface";
+import {Blog} from "../types/blogs.interface";
 
 
 export const blogsQueryRepository = {
@@ -10,10 +10,10 @@ export const blogsQueryRepository = {
 
     async blogOutput(id: ObjectId) {
         const blog = await this.findBlogById(id)
-        return this.blogMapOutput(blog as BlogDBTypeResponse)
+        return this.blogMapOutput(blog as Blog)
     },
 
-    blogMapOutput(blog: BlogDBTypeResponse) {
+    blogMapOutput(blog: Blog) {
         const {_id, createdAt, name, websiteUrl, isMembership, description} = blog
         return {
             id: _id,

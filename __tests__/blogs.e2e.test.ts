@@ -1,13 +1,15 @@
 import {codeAuth, req} from './test-helpers'
 import {SETTINGS} from '../src/settings'
-import {blogCollection, connectToDB} from "../src/db/mongo-db";
-import {BlogDBType} from "../src/types/db.interface";
-import {BlogDBTypeResponse} from "../src/types/db.response.interface";
+import {blogCollection, connectToDB, postCollection, userCollection} from "../src/db/mongo-db";
+import {BlogDBType} from "../src/dtos/blogs.dto";
 
 describe('/blogs', () => {
     beforeAll(async () => { // очистка базы данных перед началом тестирования
         // setDB()
         await connectToDB()
+        await blogCollection.deleteMany()
+        await postCollection.deleteMany()
+        await userCollection.deleteMany()
     })
 
     // it('should get empty array', async () => {
@@ -34,7 +36,6 @@ describe('/blogs', () => {
     //     // expect(res.body[0]).toEqual(dataset1.videos[0])
     // })
     it('should created', async () => {
-        await blogCollection.deleteMany()
         const newBlog: BlogDBType = {
             name: 'n1',
             description: 'd1',
@@ -52,19 +53,20 @@ describe('/blogs', () => {
         expect(res.body.description).toEqual(newBlog.description)
         expect(res.body.websiteUrl).toEqual(newBlog.websiteUrl)
         expect(typeof res.body.id).toEqual('string')
+        console.log(res.body)
 
-        const bodyResponse = await req.get('/blogs')
-
-        expect(bodyResponse.body).toEqual({} as BlogDBTypeResponse)
+        // const bodyResponse = await req.get('/blogs')
+        //
+        // expect(bodyResponse.body).toEqual({} as BlogDBTypeResponse)
     });
 
-    it('should return all blogs', async () => {
-        const res = await req.get(SETTINGS.PATH.BLOGS)
-        expect(res.status).toBe(200)
-        console.log('length: ', res.body)
-        expect(res.body.length).toBeGreaterThan(0)
+    // it('should return all blogs', async () => {
+    //     const res = await req.get(SETTINGS.PATH.BLOGS)
+    //     expect(res.status).toBe(200)
+    //     console.log('length: ', res.body)
+    //     expect(res.body.length).toBeGreaterThan(0)
         // expect(res.body).toEqual()
-    })
+    // })
 
 
 

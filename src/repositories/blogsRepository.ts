@@ -1,7 +1,8 @@
-import {BlogDBType} from "../types/db.interface";
 import {blogCollection} from "../db/mongo-db";
 import {ObjectId, UpdateResult} from "mongodb";
 import {blogsQueryRepository} from "../queryRepositories/blogsQueryRepository";
+import {BlogDBType} from "../dtos/blogs.dto";
+import {Blog} from "../types/blogs.interface";
 
 
 export const blogsRepository = {
@@ -14,7 +15,7 @@ export const blogsRepository = {
         }
     },
 
-    async createBlog(newBlog: BlogDBType): Promise<any> {
+    async createBlog(newBlog: BlogDBType): Promise<Omit<Blog, '_id'>> {
         const blog = {
             ...newBlog,
             isMembership: false,

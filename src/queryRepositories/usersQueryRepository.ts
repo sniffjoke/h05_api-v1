@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {userCollection} from "../db/mongo-db";
-import {UserDBTypeResponse} from "../types/db.response.interface";
+import {User} from "../types/users.interface";
 
 
 export const usersQueryRepository = {
@@ -28,12 +28,12 @@ export const usersQueryRepository = {
         return await userCollection.findOne({_id: id})
     },
 
-    async userOutput(id: ObjectId): Promise<Omit<UserDBTypeResponse, '_id'> | null> {
+    async userOutput(id: ObjectId): Promise<Omit<User, '_id'> | null> {
         const user = await this.findUserById(id)
-        return this.userMapOutput(user as UserDBTypeResponse)
+        return this.userMapOutput(user as User)
     },
 
-    userMapOutput(user: UserDBTypeResponse) {
+    userMapOutput(user: User) {
         const {_id, createdAt, login, email} = user
         return {
             id: _id,

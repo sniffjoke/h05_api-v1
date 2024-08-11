@@ -1,7 +1,7 @@
-import {PostDBType} from "../types/db.interface";
 import {postCollection} from "../db/mongo-db";
 import {DeleteResult, ObjectId, UpdateResult} from "mongodb";
 import {postsQueryRepository} from "../queryRepositories/postsQueryRepository";
+import {PostDBType} from "../dtos/posts.dto";
 
 
 export const postsRepository = {
