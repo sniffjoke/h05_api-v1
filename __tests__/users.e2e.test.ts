@@ -1,14 +1,11 @@
 import {codeAuth, req} from './test-helpers'
 import {SETTINGS} from '../src/settings'
-import {blogCollection, client, connectToDB, postCollection, userCollection} from "../src/db/mongo-db";
-import {BlogDBType} from "../src/dtos/blogs.dto";
+import {client, connectToDB, userCollection} from "../src/db/mongo-db";
+import {UserDBType} from "../src/dtos/users.dto";
 
-describe('/blogs', () => {
-
+describe('/users', () => {
     beforeAll(async () => { // очистка базы данных перед началом тестирования
         await connectToDB()
-        await blogCollection.deleteMany()
-        await postCollection.deleteMany()
         await userCollection.deleteMany()
     })
 
@@ -16,34 +13,33 @@ describe('/blogs', () => {
         await client.close()
     })
 
-    it('should created Blog', async () => {
-        const newBlog: BlogDBType = {
-            name: 'n1',
-            description: 'd1',
-            websiteUrl: 'http://some.com'
+    it('should created User', async () => {
+        const newUser: UserDBType = {
+            login: 'l1ret',
+            email: 'em@em.ru',
+            password: '1234qwer'
         }
 
 
         const res = await req
-            .post(SETTINGS.PATH.BLOGS)
+            .post(SETTINGS.PATH.USERS)
             .set({'Authorization': `Basic ` + codeAuth(SETTINGS.PATH.ADMIN)})
-            .send(newBlog)
+            .send(newUser)
             .expect(201)
-
-        expect(res.body.name).toEqual(newBlog.name)
-        expect(res.body.description).toEqual(newBlog.description)
-        expect(res.body.websiteUrl).toEqual(newBlog.websiteUrl)
+        console.log(res.body)
+        expect(res.body.login).toEqual(newUser.login)
+        expect(res.body.email).toEqual(newUser.email)
         expect(typeof res.body.id).toEqual('string')
         expect(typeof res.body).toEqual('object')
-        // expect(bodyResponse.body).toEqual({} as Blog)
     });
 
-    it('should return all blogs', async () => {
-        const res = await req.get(SETTINGS.PATH.BLOGS)
+    it('should return all users', async () => {
+        const res = await req.get(SETTINGS.PATH.USERS)
         expect(res.status).toBe(200)
         expect(res.body.items.length).toBeGreaterThan(0)
-        // expect(res.body).toEqual()
     })
+
+
 
 })
 

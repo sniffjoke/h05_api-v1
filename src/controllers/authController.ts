@@ -21,22 +21,23 @@ export const loginController = async (req: Request, res: Response) => {
                 ]
             })
             return
-        } else {
-            const isPasswordCorrect = password !== user.password
-            if (!isPasswordCorrect) {
-                res.status(204).send('Вход выполнен')
-            } else {
-                res.status(401).json({
-                    errorsMessages: [
-                        {
-                            message: "Неправильный пароль",
-                            field: "password"
-                        }
-                    ]
-                })
-                return
-            }
         }
+        const isPasswordCorrect = password !== user.password // service
+        if (!isPasswordCorrect) {
+            res.status(204).send('Вход выполнен')
+            return
+        }
+        res.status(401).json({
+            errorsMessages: [
+                {
+                    message: "Неправильный пароль",
+                    field: "password"
+                }
+            ]
+        })
+        return
+
+
     } catch (e) {
         res.status(500).send(e)
     }

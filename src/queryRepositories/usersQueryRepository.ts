@@ -54,7 +54,7 @@ export const usersQueryRepository = {
     },
 
     async getUserByEmail(email: string) {
-        const user = await userCollection.findOne({email})
+        const user = await userCollection.findOne({email}) //$or
         return user
     },
 

@@ -12,7 +12,7 @@ import {
 } from "../middlewares/blogsValidators";
 import {errorMiddleware} from "../middlewares/errorMiddleware";
 import {authMiddleware} from "../middlewares/authMiddleware";
-import {getAllPostsByBlogId, postPostByBlogId} from "../controllers/postsController";
+import {getAllPostsByBlogId, createPostByBlogIdWithParams} from "../controllers/postsController";
 import {
     contentPostValidator,
     shortDescriptionPostValidator,
@@ -67,7 +67,7 @@ router.route('/:id/posts')
         shortDescriptionPostValidator,
         titlePostValidator,
         errorMiddleware,
-        postPostByBlogId
+        createPostByBlogIdWithParams
     )
 
 

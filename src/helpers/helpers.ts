@@ -19,6 +19,6 @@ export const queryHelper = async (query: { [key: string]: string | undefined }, 
         page: query.pageNumber ? Number(query.pageNumber) : 1,
         sortBy: query.sortBy ? query.sortBy : 'createdAt',
         sortDirection: query.sortDirection ? query.sortDirection : 'desc',
-        searchNameTerm,
+        searchNameTerm
     }
 }

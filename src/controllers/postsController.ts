@@ -39,7 +39,7 @@ export const getControllerById = async (req: Request, res: Response) => {
     }
 }
 
-export const postController = async (req: Request, res: Response) => {
+export const createPostController = async (req: Request, res: Response) => {
     try {
         const blog = await blogsQueryRepository.findBlogById(new ObjectId(req.body.blogId))
         const newPost = await postsRepository.createPost({...req.body, blogName: blog?.name})
@@ -50,7 +50,7 @@ export const postController = async (req: Request, res: Response) => {
     }
 }
 
-export const putController = async (req: Request, res: Response) => {
+export const updatePostController = async (req: Request, res: Response) => {
     try {
         const postId = new ObjectId(req.params.id)
         await postsRepository.updatePostById(postId, req.body)
@@ -72,7 +72,6 @@ export const deleteController = async (req: Request, res: Response) => {
 
 export const getAllPostsByBlogId = async (req: Request<any, any, any, any>, res: Response) => {
     try {
-        console.log(req.params.id)
         const query = await queryHelper(req.query, 'posts', req.params.id)
         const posts = await postsRepository.findAllPostsByBlogId(req.params.id, query)
         const {
@@ -94,7 +93,7 @@ export const getAllPostsByBlogId = async (req: Request<any, any, any, any>, res:
     }
 }
 
-export const postPostByBlogId = async (req: Request, res: Response) => {
+export const createPostByBlogIdWithParams = async (req: Request, res: Response) => {
     try {
         const blog = await blogsQueryRepository.findBlogById(new ObjectId(req.params.id))
         const newPost = await postsRepository.createPost({...req.body, blogName: blog?.name, blogId: req.params.id})

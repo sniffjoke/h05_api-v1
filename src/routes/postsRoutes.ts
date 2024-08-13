@@ -3,8 +3,8 @@ import {
     deleteController,
     getController,
     getControllerById,
-    postController,
-    putController
+    createPostController,
+    updatePostController
 } from "../controllers/postsController";
 import {
     titlePostValidator,
@@ -28,7 +28,7 @@ router.route('/')
         blogIdValidator,
         shortDescriptionPostValidator,
         errorMiddleware,
-        postController
+        createPostController
     );
 router.route('/:id')
     .put(
@@ -39,7 +39,7 @@ router.route('/:id')
         blogIdValidator,
         shortDescriptionPostValidator,
         errorMiddleware,
-        putController
+        updatePostController
     )
     .delete(
         authMiddleware,
